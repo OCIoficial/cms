@@ -40,7 +40,7 @@ from sqlalchemy.ext.orderinglist import ordering_list
 
 from . import Base, Contest
 from .smartmappedcollection import smart_mapped_collection, smc_sa10_workaround
-from cms import SCORE_MODE_MAX, SCORE_MODE_MAX_TOKENED_LAST
+from cms import SCORE_MODE_MAX, SCORE_MODE_MAX_TOKENED_LAST, SCORE_MODE_MAX_SUBTASK
 
 
 class Task(Base):
@@ -195,7 +195,7 @@ class Task(Base):
 
     # Score mode for the task.
     score_mode = Column(
-        Enum(SCORE_MODE_MAX_TOKENED_LAST, SCORE_MODE_MAX,
+        Enum(SCORE_MODE_MAX_TOKENED_LAST, SCORE_MODE_MAX, SCORE_MODE_MAX_SUBTASK,
              name="score_mode"),
         nullable=False,
         default=SCORE_MODE_MAX_TOKENED_LAST)

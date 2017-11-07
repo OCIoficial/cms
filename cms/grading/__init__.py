@@ -33,11 +33,11 @@ import logging
 import os
 import six
 
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 
 from sqlalchemy.orm import joinedload
 
-from cms import SCORE_MODE_MAX, config
+from cms import SCORE_MODE_MAX, SCORE_MODE_MAX_SUBTASK, config
 from cms.db import Submission
 from cms.grading.Sandbox import Sandbox
 
@@ -898,6 +898,17 @@ def task_score(participation, task):
                 partial = True
 
         score = max_score
+    elif task.score_mode == SCORE_MODE_MAX_SUBTASK:
+        max_score_subtask = defaultdict(int)
+        for s in submissions:
+            sr = s.get_result(task.active_dataset)
+            if sr is not None and sr.scored():
+                for st in json.loads(sr.score_details):
+                    idx = st["idx"]
+                    max_score_subtask[idx] = max(max_score_subtask[idx], st["score"])
+            else:
+                partial = True
+        score = sum(max_score_subtask.values())
     else:
         # Like in IOI 2010-2012: maximum score among all tokened
         # submissions and the last submission.
