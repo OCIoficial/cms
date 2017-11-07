@@ -74,5 +74,5 @@ class GroupPiecewiseLinear(ScoreTypeGroup):
     def reduce(self, outcomes, parameters):
         """See ScoreTypeGroup."""
         points = sorted(parameters[2:])
-        P = sum(outcome >= 1.0 for outcome in outcomes) / len(outcomes)
+        P = 1.0 * sum(outcome >= 1.0 for outcome in outcomes) / len(outcomes)
         return piecewise_linear_function(P, points)
